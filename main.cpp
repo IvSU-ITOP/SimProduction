@@ -56,6 +56,8 @@ int main( int argc, char *argv[] )
   try
     {
     s_DB.setDatabaseName( "Production" );
+    s_DB.setUserName("root");
+    s_DB.setPassword("Sim1Production2");
     if( !s_DB.open() ) throw Rus( "Ѕаза данных не открылась" );
     ProductionState PS;
     Generator DetailParty; //создаем партии деталей
