@@ -27,7 +27,7 @@ double Time::sm_ReShift = 0.0; // время пересменки
 double Time::sm_Precision = 0.0;
 Time Simulator::sm_End;
 Time Time::sm_CurrentTime(0);
-QSqlDatabase s_DB(QSqlDatabase::addDatabase("QODBC"));
+QSqlDatabase s_DB(QSqlDatabase::addDatabase("QMYSQL"));
 ProductionState* ProductionState::sm_pProductionState;
 int ProductionState::sm_WorkDayCount = 24;
 int Route::sm_Variant = 0;
