@@ -356,7 +356,7 @@ ProductionState::ProductionState() : m_ShiftStarted( true ), m_pWait( new WaitWi
   {
   sm_pProductionState = this;
   QSqlQuery Query;
-  Query.exec(Rus("SELECT Номер_детали, [Название детали] FROM Деталь"));
+  Query.exec(Rus("SELECT Номер_детали, Название_детали FROM Деталь));
   if (Query.lastError().isValid())
     throw Rus("Ошибка при выполнении запроса: ") + Query.lastError().text();
   while (Query.next())
