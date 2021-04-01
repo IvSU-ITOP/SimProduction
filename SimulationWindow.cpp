@@ -54,8 +54,8 @@ void MainWindow::slotShowTableNine ()
     QTableView *pView = new QTableView;
     QSqlQueryModel *pModel = new QSqlQueryModel;
     QString m_SQLQuery = Rus (" SELECT [Номер_изделия], [Номер_детали], [Применяемость], ") +
-      Rus (" (SELECT[Количество, шт.]  from [Варианты] where [Номер варианта] = ") + QString::number (Route::sm_Variant) +
-      Rus (" and [Варианты].[Номер изделия] = [Состав_изделия].[Номер_изделия]) as [План производства изделий],") +
+      Rus (" (SELECT[Количество, шт.]  from [Варианты] where [Номер_варианта] = ") + QString::number (Route::sm_Variant) +
+      Rus (" and [Варианты].[Номер_изделия] = [Состав_изделия].[Номер_изделия]) as [План производства изделий],") +
       Rus (" (SELECT[Количество, шт.]  from [Варианты] where [Номер варианта] = ") + QString::number (Route::sm_Variant) + 
       Rus (" and [Варианты].[Номер изделия] = [Состав_изделия].[Номер_изделия])  * [Применяемость] as[План производства деталей] ") +
       Rus ("from[Состав_изделия] ");
