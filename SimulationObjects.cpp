@@ -63,7 +63,7 @@ Actor::Actor(Time TimeStart, int DetailCount, Route *pRoute) : m_TimeStart(TimeS
   NextStep();
   }
 
-ServiceResult Actor::SelectQueue( VectorQueues *pVQ )
+ServiceResult Actor::Queue( VectorQueues *pVQ )
   {
   if( m_CurrentStep == m_pRoute->count() ) 
     return BadActor;
@@ -392,7 +392,7 @@ void ProductionState::Evaluate()
       pActing = m_ActingBlocks.erase( pActing );
   m_Ware.clear();
   QSqlQuery Query;
-  QString RusQuery = Rus( "SELECT [Номер изделия], [Наименование_изделия], [Цена_изделия], [Количество, шт.] from Варианты " ) +
+  QString RusQuery = Rus( "SELECT Номер_изделия, Наименование_изделия, Цена_изделия, Количество,_шт. from Варианты  ) +
     Rus( "Inner Join Изделия ON Варианты.[Номер изделия] = " ) +
     Rus( "Изделия.Номер_изделия where [Номер варианта] = " ) + QString::number( Route::sm_Variant );
   Query.exec( RusQuery );
@@ -544,7 +544,7 @@ GroupEquipment::GroupEquipment( int GroupId, ActingBlock *pPrevQueue, Delay* pLi
   m_pRNumber = nullptr;
   pPrevQueue->SetNextBlock(this); //подключаемся к очереди
   QSqlQuery Query;
-  Query.exec(Rus("SELECT  Наименования_оборудования, \
+  Query.exec(Rus("  Наименования_оборудования, \
     Время_обработки_в_другом_цехе, Длительность_профилактики, \
     Интервал_между_профилактиками, Средний_коэффициент FROM Оборудование_цеха where Номер_группы = ") +
     QString::number(GroupId));
@@ -592,7 +592,7 @@ void GroupEquipment::StartWork()
   m_EventQueue.clear();
   m_EventQueue.insert( Time::sm_StartWork, evSchiftStart );
   QSqlQuery Query;
-  Query.exec( Rus( "SELECT Название FROM Профессии where Группа_оборудования = " ) + QString::number( m_GroupId ) );
+  Query.exec( Rus( " Название FROM Профессии where Группа_оборудования = " ) + QString::number( m_GroupId ) );
   if( Query.lastError().isValid() )
     throw Rus( "Ошибка при выполнении запроса:" ) + Query.lastError().text();
   Query.next();
