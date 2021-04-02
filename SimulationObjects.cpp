@@ -392,7 +392,7 @@ void ProductionState::Evaluate()
       pActing = m_ActingBlocks.erase( pActing );
   m_Ware.clear();
   QSqlQuery Query;
-  QString RusQuery = Rus( "SELECT [Номер изделия], [Наименование_изделия], [Цена_изделия], [Количество, шт.] from Варианты " ) +
+  QString RusQuery = Rus( "SELECT Номер_изделия, Наименование_изделия, Цена_изделия, Количество,_шт. from Варианты " ) +
     Rus( "Inner Join Изделия ON Варианты.[Номер изделия] = " ) +
     Rus( "Изделия.Номер_изделия where [Номер варианта] = " ) + QString::number( Route::sm_Variant );
   Query.exec( RusQuery );
