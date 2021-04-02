@@ -1,4 +1,4 @@
-#include "SimulationObjects.h"
+п»ї#include "SimulationObjects.h"
 #include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -14,7 +14,6 @@
 #include <qtimer.h>
 #include <qthread.h>
 
-QTextCodec *pCodec = QTextCodec::codecForName("Windows-1251");
 extern QFile s_LogFile;
 
 const double Time::sc_BadTime = 1e300;
@@ -23,7 +22,7 @@ const double BaseActingBlock::sc_NoTime = Time::sc_BadTime;
 double Time::sm_ShiftLength = 8.0;
 int Time::sm_ShiftCount = 1.0;
 double Time::sm_StartWork = 5.0;
-double Time::sm_ReShift = 0.0; // время пересменки 
+double Time::sm_ReShift = 0.0; // РІСЂРµРјСЏ РїРµСЂРµСЃРјРµРЅРєРё 
 double Time::sm_Precision = 0.0;
 Time Simulator::sm_End;
 Time Time::sm_CurrentTime(0);
@@ -63,14 +62,14 @@ Actor::Actor(Time TimeStart, int DetailCount, Route *pRoute) : m_TimeStart(TimeS
   NextStep();
   }
 
-ServiceResult Actor::Queue( VectorQueues *pVQ )
+ServiceResult Actor::SelectQueue( VectorQueues *pVQ )
   {
   if( m_CurrentStep == m_pRoute->count() ) 
     return BadActor;
   for (VectorQueues::iterator pQ = pVQ->begin(); pQ != pVQ->end(); pQ++)
     if ((*pQ)->Evaluate(this) == Success) return Success;
   return BadActor;
-  }  //Выбираем очередь к той группе оборудования, которая может обслужить эту партию деталей.
+  }  //Р’С‹Р±РёСЂР°РµРј РѕС‡РµСЂРµРґСЊ Рє С‚РѕР№ РіСЂСѓРїРїРµ РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ, РєРѕС‚РѕСЂР°СЏ РјРѕР¶РµС‚ РѕР±СЃР»СѓР¶РёС‚СЊ СЌС‚Сѓ РїР°СЂС‚РёСЋ РґРµС‚Р°Р»РµР№.
 
 bool Actor::GetRawDetail()
   {
@@ -96,12 +95,12 @@ bool Actor::NextStep()
     qDebug() << "Next Step" << m_pRoute->DetailName() << "Step" << m_CurrentStep << ( *m_pRoute )[m_CurrentStep].m_GroupId;
   if( ++m_CurrentStep == m_pRoute->count() ) return false;
   m_RawCount = m_DetailCount;
-  m_DetailWorkTime = RNormal( m_pRoute->at( m_CurrentStep ).m_DetailTime, 0.04 * m_pRoute->at( m_CurrentStep ).m_DetailTime ); //логарифм времени изготовления будет распределен по нормальному закону. Время обработки будет изменяться примерно на 10%
+  m_DetailWorkTime = RNormal( m_pRoute->at( m_CurrentStep ).m_DetailTime, 0.04 * m_pRoute->at( m_CurrentStep ).m_DetailTime ); //Р»РѕРіР°СЂРёС„Рј РІСЂРµРјРµРЅРё РёР·РіРѕС‚РѕРІР»РµРЅРёСЏ Р±СѓРґРµС‚ СЂР°СЃРїСЂРµРґРµР»РµРЅ РїРѕ РЅРѕСЂРјР°Р»СЊРЅРѕРјСѓ Р·Р°РєРѕРЅСѓ. Р’СЂРµРјСЏ РѕР±СЂР°Р±РѕС‚РєРё Р±СѓРґРµС‚ РёР·РјРµРЅСЏС‚СЊСЃСЏ РїСЂРёРјРµСЂРЅРѕ РЅР° 10%
   double ReadjustmentTime = m_pRoute->at(m_CurrentStep).m_PartyTime;
   if( ReadjustmentTime == 0.0 )
     m_PartyWorkTime = RNormal();
   else
-    m_PartyWorkTime = RNormal( ReadjustmentTime, 0.04 * ReadjustmentTime ); //логарифм подготовительно-заключительного времени будет распределен по нормальному закону. Время обработки будет изменяться примерно на 10%
+    m_PartyWorkTime = RNormal( ReadjustmentTime, 0.04 * ReadjustmentTime ); //Р»РѕРіР°СЂРёС„Рј РїРѕРґРіРѕС‚РѕРІРёС‚РµР»СЊРЅРѕ-Р·Р°РєР»СЋС‡РёС‚РµР»СЊРЅРѕРіРѕ РІСЂРµРјРµРЅРё Р±СѓРґРµС‚ СЂР°СЃРїСЂРµРґРµР»РµРЅ РїРѕ РЅРѕСЂРјР°Р»СЊРЅРѕРјСѓ Р·Р°РєРѕРЅСѓ. Р’СЂРµРјСЏ РѕР±СЂР°Р±РѕС‚РєРё Р±СѓРґРµС‚ РёР·РјРµРЅСЏС‚СЊСЃСЏ РїСЂРёРјРµСЂРЅРѕ РЅР° 10%
   return true;
   }
 
@@ -158,7 +157,7 @@ void Generator::Evaluate()
 
  void NamedBlock::Report()
    {
-//   sm_Sout << "занятость объекта " << m_Name << ' ' << Round( m_WorkTime / Time::GetCurrentTime(), 4 ) << endl;
+//   sm_Sout << "Р·Р°РЅСЏС‚РѕСЃС‚СЊ РѕР±СЉРµРєС‚Р° " << m_Name << ' ' << Round( m_WorkTime / Time::GetCurrentTime(), 4 ) << endl;
    }
 
  void NamedBlock::StartWork()
@@ -206,7 +205,7 @@ Actor* Queue::GetActor()
 void Queue::Report()
   {
   NamedBlock::Report();
-//  sm_Sout << "максимальная длина " << m_MaxLen << endl;
+//  sm_Sout << "РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° " << m_MaxLen << endl;
   }
 
 ServiceResult Service::Evaluate(Actor *pA)
@@ -228,11 +227,11 @@ ServiceResult Terminator::Evaluate(Actor *pA)
 
 void Terminator::Report()
   {
-//  sm_Sout << "Прошло " << m_ActorCount << " акторов." << endl;
-//  sm_Sout << "Минимальное время обслуживания " << m_MinTime << endl;
-//  sm_Sout << "Максимальное время обслуживания " << m_MaxTime << endl;
-//  sm_Sout << "Среднее время обслуживания " << m_SummTime / m_ActorCount << endl;
-//  sm_Sout << "Средеквадратичное отклонение времени обслуживания " 
+//  sm_Sout << "РџСЂРѕС€Р»Рѕ " << m_ActorCount << " Р°РєС‚РѕСЂРѕРІ." << endl;
+//  sm_Sout << "РњРёРЅРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ " << m_MinTime << endl;
+//  sm_Sout << "РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ " << m_MaxTime << endl;
+//  sm_Sout << "РЎСЂРµРґРЅРµРµ РІСЂРµРјСЏ РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ " << m_SummTime / m_ActorCount << endl;
+//  sm_Sout << "РЎСЂРµРґРµРєРІР°РґСЂР°С‚РёС‡РЅРѕРµ РѕС‚РєР»РѕРЅРµРЅРёРµ РІСЂРµРјРµРЅРё РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ " 
 //    << sqrt( (m_SummTimeSquares * m_ActorCount - m_SummTime * m_SummTime) /( m_ActorCount * ( m_ActorCount - 1 ) ) ) << endl;
   }
 
@@ -260,7 +259,7 @@ ServiceResult Switch::Evaluate(Actor *pActor)
 Time::Time(double Hour) : Time()
   {
   if (Hour == sc_BadTime) return;
-  if (Hour < 0.0) throw Rus("Заданное время: ") + QString::number(Hour) + Rus(" меньше нуля");
+  if (Hour < 0.0) throw "Р—Р°РґР°РЅРЅРѕРµ РІСЂРµРјСЏ: " + QString::number(Hour) + " РјРµРЅСЊС€Рµ РЅСѓР»СЏ";
   m_Hour = Hour;
   } 
 
@@ -268,7 +267,7 @@ bool Time::SetDayParameters(double ShiftLength, int ShiftCount, double StartDay)
   {
   if ((ShiftLength*ShiftCount) > 24)
     {
-    QMessageBox::critical(nullptr, Rus("Ошибка! "), Rus("Заданные параметры рабочего дня неверны"));
+    QMessageBox::critical(nullptr, "РћС€РёР±РєР°! ", "Р—Р°РґР°РЅРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ СЂР°Р±РѕС‡РµРіРѕ РґРЅСЏ РЅРµРІРµСЂРЅС‹");
     return false;
     }
   sm_ShiftLength = ShiftLength;
@@ -356,9 +355,9 @@ ProductionState::ProductionState() : m_ShiftStarted( true ), m_pWait( new WaitWi
   {
   sm_pProductionState = this;
   QSqlQuery Query;
-  Query.exec(Rus("SELECT Номер_детали, Название_детали FROM Деталь"));
+  Query.exec("SELECT РќРѕРјРµСЂ_РґРµС‚Р°Р»Рё, РќР°Р·РІР°РЅРёРµ_РґРµС‚Р°Р»Рё FROM Р”РµС‚Р°Р»СЊ");
   if (Query.lastError().isValid())
-    throw Rus("Ошибка при выполнении запроса: ") + Query.lastError().text();
+    throw "РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°: " + Query.lastError().text();
   while (Query.next())
     {
     int Id = Query.value(0).toInt();
@@ -392,12 +391,12 @@ void ProductionState::Evaluate()
       pActing = m_ActingBlocks.erase( pActing );
   m_Ware.clear();
   QSqlQuery Query;
-  QString RusQuery = Rus( "SELECT Номер_изделия, Наименование_изделия, Цена_изделия, Количество,_шт. from Варианты" ) +
-    Rus( "Inner Join Изделия ON Варианты. Номер изделия = ") +
-    Rus( "Изделия.Номер_изделия where [Номер варианта] = " ) + QString::number( Route::sm_Variant );
+  QString RusQuery = QString("SELECT РќРѕРјРµСЂ_РёР·РґРµР»РёСЏ, РќР°РёРјРµРЅРѕРІР°РЅРёРµ_РёР·РґРµР»РёСЏ, Р¦РµРЅР°_РёР·РґРµР»РёСЏ, РљРѕР»РёС‡РµСЃС‚РІРѕ,_С€С‚. from Р’Р°СЂРёР°РЅС‚С‹") +
+     "Inner Join РР·РґРµР»РёСЏ ON Р’Р°СЂРёР°РЅС‚С‹. РќРѕРјРµСЂ РёР·РґРµР»РёСЏ = " +
+    "РР·РґРµР»РёСЏ.РќРѕРјРµСЂ_РёР·РґРµР»РёСЏ where [РќРѕРјРµСЂ РІР°СЂРёР°РЅС‚Р°] = " + QString::number( Route::sm_Variant );
   Query.exec( RusQuery );
   if( Query.lastError().isValid() )
-    throw Rus( "Ошибка при выполнении запроса: " ) + Query.lastError().text();
+    throw "РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°: " + Query.lastError().text();
   while( Query.next() )
     {
     Product P( Query.value( 0 ).toInt(), Query.value( 1 ).toString(), Query.value( 2 ).toDouble(), Query.value( 3 ).toInt() );
@@ -438,12 +437,12 @@ Route::Route(int Id, const QString& DetailName) : m_DetailType(Id), m_DetailName
   m_SumDetailTime( 0 ), m_SumReadjustmentTime( 0 ), m_SumGalvanic( 0 ), m_SumLieTime( 0 )
   {
   QSqlQuery Query; 
-  Query.exec(Rus("SELECT  Операции.Номер_группы, Штучное_время, Подготовительно_заключительное_время, \
-    Время_предварительного_пролеживания, Время_обработки_в_другом_цехе FROM Операции Inner Join Оборудование_цеха on \
-    Операции.Номер_группы=Оборудование_цеха.Номер_группы where Номер_детали = ") +
-    QString::number(Id) + Rus(" order by Номер_операции"));
+  Query.exec("SELECT  РћРїРµСЂР°С†РёРё.РќРѕРјРµСЂ_РіСЂСѓРїРїС‹, РЁС‚СѓС‡РЅРѕРµ_РІСЂРµРјСЏ, РџРѕРґРіРѕС‚РѕРІРёС‚РµР»СЊРЅРѕ_Р·Р°РєР»СЋС‡РёС‚РµР»СЊРЅРѕРµ_РІСЂРµРјСЏ, \
+    Р’СЂРµРјСЏ_РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕРіРѕ_РїСЂРѕР»РµР¶РёРІР°РЅРёСЏ, Р’СЂРµРјСЏ_РѕР±СЂР°Р±РѕС‚РєРё_РІ_РґСЂСѓРіРѕРј_С†РµС…Рµ FROM РћРїРµСЂР°С†РёРё Inner Join РћР±РѕСЂСѓРґРѕРІР°РЅРёРµ_С†РµС…Р° on \
+    РћРїРµСЂР°С†РёРё.РќРѕРјРµСЂ_РіСЂСѓРїРїС‹=РћР±РѕСЂСѓРґРѕРІР°РЅРёРµ_С†РµС…Р°.РќРѕРјРµСЂ_РіСЂСѓРїРїС‹ where РќРѕРјРµСЂ_РґРµС‚Р°Р»Рё = " +
+    QString::number(Id) + " order by РќРѕРјРµСЂ_РѕРїРµСЂР°С†РёРё");
   if (Query.lastError().isValid())
-    throw Rus("Ошибка при выполнении запроса:") + Query.lastError().text();
+    throw "РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°:" + Query.lastError().text();
   bool FirstStep = true;
   while (Query.next())  //3
     {
@@ -464,17 +463,17 @@ Route::Route(int Id, const QString& DetailName) : m_DetailType(Id), m_DetailName
 void Route::StartWork()
   {
   int iPrelPartVol = ceil( m_PrelVolumeParty );
-  m_VolumeParty = QInputDialog::getInt( nullptr, Rus( "Ввод объема партии" ), Rus( "Деталь: " ) + m_DetailName +
-    Rus( ", предв. объем партии: " ) + QString::number( m_PrelVolumeParty ), iPrelPartVol, iPrelPartVol );
+  m_VolumeParty = QInputDialog::getInt( nullptr,  "Р’РІРѕРґ РѕР±СЉРµРјР° РїР°СЂС‚РёРё" ,  "Р”РµС‚Р°Р»СЊ: "  + m_DetailName +
+    ", РїСЂРµРґРІ. РѕР±СЉРµРј РїР°СЂС‚РёРё: "  + QString::number( m_PrelVolumeParty ), iPrelPartVol, iPrelPartVol );
   m_TotalTime = ( m_SumDetailTime * m_VolumeParty + m_SumReadjustmentTime + m_SumLieTime + m_SumGalvanic ) / Time::DobeLength();
-  QString RusQuery = Rus( "SELECT [Количество, шт.], [Применяемость], Варианты.[Номер изделия] from Варианты " ) +
-    Rus( "Inner Join Состав_изделия ON Варианты.[Номер изделия] = " ) +
-    Rus( "Состав_изделия.Номер_изделия where [Номер варианта] = " ) +
-    QString::number( sm_Variant ) + Rus( " and Номер_Детали = " ) + QString::number( m_DetailType );
+  QString RusQuery = "SELECT [РљРѕР»РёС‡РµСЃС‚РІРѕ, С€С‚.], [РџСЂРёРјРµРЅСЏРµРјРѕСЃС‚СЊ], Р’Р°СЂРёР°РЅС‚С‹.[РќРѕРјРµСЂ РёР·РґРµР»РёСЏ] from Р’Р°СЂРёР°РЅС‚С‹ \
+    Inner Join РЎРѕСЃС‚Р°РІ_РёР·РґРµР»РёСЏ ON Р’Р°СЂРёР°РЅС‚С‹.[РќРѕРјРµСЂ РёР·РґРµР»РёСЏ] =  \
+    РЎРѕСЃС‚Р°РІ_РёР·РґРµР»РёСЏ.РќРѕРјРµСЂ_РёР·РґРµР»РёСЏ where [РќРѕРјРµСЂ РІР°СЂРёР°РЅС‚Р°] = "  +
+    QString::number( sm_Variant ) + " and РќРѕРјРµСЂ_Р”РµС‚Р°Р»Рё = " + QString::number( m_DetailType );
   QSqlQuery Query;
   Query.exec( RusQuery );
   if( Query.lastError().isValid() )
-    throw Rus( "Ошибка при выполнении запроса:" ) + Query.lastError().text();
+    throw  "РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°:" + Query.lastError().text();
   Query.next();
   m_Applicability = Query.value( 1 ).toInt();
   m_PlanCount = Query.value( 0 ).toInt() * m_Applicability;
@@ -542,14 +541,14 @@ GroupEquipment::GroupEquipment( int GroupId, ActingBlock *pPrevQueue, Delay* pLi
   {
   m_pNextBlock = pLieTime;
   m_pRNumber = nullptr;
-  pPrevQueue->SetNextBlock(this); //подключаемся к очереди
+  pPrevQueue->SetNextBlock(this); //РїРѕРґРєР»СЋС‡Р°РµРјСЃСЏ Рє РѕС‡РµСЂРµРґРё
   QSqlQuery Query;
-  Query.exec(Rus("  Наименования_оборудования, \
-    Время_обработки_в_другом_цехе, Длительность_профилактики, \
-    Интервал_между_профилактиками, Средний_коэффициент FROM Оборудование_цеха where Номер_группы = ") +
+  Query.exec("  РќР°РёРјРµРЅРѕРІР°РЅРёСЏ_РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ, \
+    Р’СЂРµРјСЏ_РѕР±СЂР°Р±РѕС‚РєРё_РІ_РґСЂСѓРіРѕРј_С†РµС…Рµ, Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ_РїСЂРѕС„РёР»Р°РєС‚РёРєРё, \
+    РРЅС‚РµСЂРІР°Р»_РјРµР¶РґСѓ_РїСЂРѕС„РёР»Р°РєС‚РёРєР°РјРё, РЎСЂРµРґРЅРёР№_РєРѕСЌС„С„РёС†РёРµРЅС‚ FROM РћР±РѕСЂСѓРґРѕРІР°РЅРёРµ_С†РµС…Р° where РќРѕРјРµСЂ_РіСЂСѓРїРїС‹ = " +
     QString::number(GroupId));
   if( Query.lastError().isValid() )
-    throw Rus( "Ошибка при выполнении запроса:" ) + Query.lastError().text();
+    throw "РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°:" + Query.lastError().text();
   Query.next();
   m_Name = Query.value(0).toString();
   m_AnotherTime = Query.value(1).toDouble();
@@ -557,7 +556,7 @@ GroupEquipment::GroupEquipment( int GroupId, ActingBlock *pPrevQueue, Delay* pLi
   if( m_MeanRepairTime == 0 )
     m_RepairTimeNeed = RNormal( 0, 0 );
   else
-    m_RepairTimeNeed = RNormal( m_MeanRepairTime, m_MeanRepairTime * 0.3 ); //логарифм времени профилактики будет распределен по нормальному закону. Время профилактики будет изменяться примерно в два раза
+    m_RepairTimeNeed = RNormal( m_MeanRepairTime, m_MeanRepairTime * 0.3 ); //Р»РѕРіР°СЂРёС„Рј РІСЂРµРјРµРЅРё РїСЂРѕС„РёР»Р°РєС‚РёРєРё Р±СѓРґРµС‚ СЂР°СЃРїСЂРµРґРµР»РµРЅ РїРѕ РЅРѕСЂРјР°Р»СЊРЅРѕРјСѓ Р·Р°РєРѕРЅСѓ. Р’СЂРµРјСЏ РїСЂРѕС„РёР»Р°РєС‚РёРєРё Р±СѓРґРµС‚ РёР·РјРµРЅСЏС‚СЊСЃСЏ РїСЂРёРјРµСЂРЅРѕ РІ РґРІР° СЂР°Р·Р°
   m_RepairInterval = Query.value(3).toDouble();
   m_MeanCoeff = Query.value( 4 ).toDouble();
   }
@@ -592,9 +591,9 @@ void GroupEquipment::StartWork()
   m_EventQueue.clear();
   m_EventQueue.insert( Time::sm_StartWork, evSchiftStart );
   QSqlQuery Query;
-  Query.exec( Rus( " Название FROM Профессии where Группа_оборудования = " ) + QString::number( m_GroupId ) );
+  Query.exec( " РќР°Р·РІР°РЅРёРµ FROM РџСЂРѕС„РµСЃСЃРёРё where Р“СЂСѓРїРїР°_РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ = " + QString::number( m_GroupId ) );
   if( Query.lastError().isValid() )
-    throw Rus( "Ошибка при выполнении запроса:" ) + Query.lastError().text();
+    throw "РћС€РёР±РєР° РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё Р·Р°РїСЂРѕСЃР°:" + Query.lastError().text();
   Query.next();
   double ProbUnappear = 1.0 - 1.0 / K;
   int ListCount = BenchCount * Time::sm_ShiftCount;
@@ -614,9 +613,9 @@ void GroupEquipment::StartFree()
 
 void GroupEquipment::Evaluate()
   {
-  auto First = m_EventQueue.begin();  //получаем итератор ближайшего события.
-  EventType Type = First.value();  //получаем тип события
-  m_EventQueue.erase(First); //удаляем событие из очереди.
+  auto First = m_EventQueue.begin();  //РїРѕР»СѓС‡Р°РµРј РёС‚РµСЂР°С‚РѕСЂ Р±Р»РёР¶Р°Р№С€РµРіРѕ СЃРѕР±С‹С‚РёСЏ.
+  EventType Type = First.value();  //РїРѕР»СѓС‡Р°РµРј С‚РёРї СЃРѕР±С‹С‚РёСЏ
+  m_EventQueue.erase(First); //СѓРґР°Р»СЏРµРј СЃРѕР±С‹С‚РёРµ РёР· РѕС‡РµСЂРµРґРё.
   
   switch( Type )
     {
@@ -629,7 +628,7 @@ void GroupEquipment::Evaluate()
       int WorkersInShift = m_Worker.ListCount() / Time::ShiftCount();
       qDebug() << "GroupEquipment, Evaluate, evSchiftStart " << m_Name << " WorkersCount " << WorkersCount << " From " << WorkersInShift;
       ProductionState::sm_pProductionState->StartShift();
-      m_EventQueue.insert( Time::GetCurrentTime().EndCurrentShift(), evSchiftEnd ); //обеспечиваем событие "Конец смены"
+      m_EventQueue.insert( Time::GetCurrentTime().EndCurrentShift(), evSchiftEnd ); //РѕР±РµСЃРїРµС‡РёРІР°РµРј СЃРѕР±С‹С‚РёРµ "РљРѕРЅРµС† СЃРјРµРЅС‹"
       if( WorkersCount == 0 )
         {
         for( auto pBench = m_BenchArray.begin(); pBench != m_BenchArray.end(); pBench++ )
@@ -641,7 +640,7 @@ void GroupEquipment::Evaluate()
           m_BenchArray[iBench].SetWorker( true );
       else
         {
-        int iBenchComplected = 0; //число станков, которые получили рабочего
+        int iBenchComplected = 0; //С‡РёСЃР»Рѕ СЃС‚Р°РЅРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ РїРѕР»СѓС‡РёР»Рё СЂР°Р±РѕС‡РµРіРѕ
         int iBench = 0;
         for( ; iBench < m_BenchArray.count() && iBenchComplected < WorkersCount; iBench++ )
           if( m_BenchArray[iBench].m_RepairTime == 0 )
@@ -649,16 +648,16 @@ void GroupEquipment::Evaluate()
             m_BenchArray[iBench].SetWorker( true );
             iBenchComplected++;
             }
-        if( iBench < m_BenchArray.count() ) //рабочих не хватило даже станкам, не стоящим в профилактике
+        if( iBench < m_BenchArray.count() ) //СЂР°Р±РѕС‡РёС… РЅРµ С…РІР°С‚РёР»Рѕ РґР°Р¶Рµ СЃС‚Р°РЅРєР°Рј, РЅРµ СЃС‚РѕСЏС‰РёРј РІ РїСЂРѕС„РёР»Р°РєС‚РёРєРµ
           {
           int iBnch = 0;
-          for( ; iBnch < iBench; iBnch++ )   //устанавливаем признак отсутствия для ранее проверенных станков, стоящих на профилактике
+          for( ; iBnch < iBench; iBnch++ )   //СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїСЂРёР·РЅР°Рє РѕС‚СЃСѓС‚СЃС‚РІРёСЏ РґР»СЏ СЂР°РЅРµРµ РїСЂРѕРІРµСЂРµРЅРЅС‹С… СЃС‚Р°РЅРєРѕРІ, СЃС‚РѕСЏС‰РёС… РЅР° РїСЂРѕС„РёР»Р°РєС‚РёРєРµ
             if( m_BenchArray[iBnch].m_RepairTime != 0 )
               m_BenchArray[iBnch].SetWorker( false );
-          for( ; iBnch < m_BenchArray.count(); iBnch++ ) //устанавливаем признак отсутствия для остальных станков
+          for( ; iBnch < m_BenchArray.count(); iBnch++ ) //СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїСЂРёР·РЅР°Рє РѕС‚СЃСѓС‚СЃС‚РІРёСЏ РґР»СЏ РѕСЃС‚Р°Р»СЊРЅС‹С… СЃС‚Р°РЅРєРѕРІ
             m_BenchArray[iBnch].SetWorker( false );
           }
-        else   //рабочие назначены для всех станков, не стоящих на профилактике. Обеспечим рабочимии часть станков, требующих профилактики
+        else   //СЂР°Р±РѕС‡РёРµ РЅР°Р·РЅР°С‡РµРЅС‹ РґР»СЏ РІСЃРµС… СЃС‚Р°РЅРєРѕРІ, РЅРµ СЃС‚РѕСЏС‰РёС… РЅР° РїСЂРѕС„РёР»Р°РєС‚РёРєРµ. РћР±РµСЃРїРµС‡РёРј СЂР°Р±РѕС‡РёРјРёРё С‡Р°СЃС‚СЊ СЃС‚Р°РЅРєРѕРІ, С‚СЂРµР±СѓСЋС‰РёС… РїСЂРѕС„РёР»Р°РєС‚РёРєРё
           for( iBench = 0; iBench < m_BenchArray.count() && iBenchComplected < WorkersCount; iBench++ )
             if( m_BenchArray[iBench].m_RepairTime != 0 )
               {
@@ -726,7 +725,7 @@ Bench::StateType GroupEquipment::GetDetail(Bench &Bench)
     StartFree();
     return Bench::bnchFree;
     }
-  if( m_pCurrentActor->GetRawDetail() )   // получена необработанная деталь.
+  if( m_pCurrentActor->GetRawDetail() )   // РїРѕР»СѓС‡РµРЅР° РЅРµРѕР±СЂР°Р±РѕС‚Р°РЅРЅР°СЏ РґРµС‚Р°Р»СЊ.
     {
     Bench.SetDetail();
     return Bench.m_State;
@@ -741,7 +740,7 @@ Bench::StateType GroupEquipment::GetDetail(Bench &Bench)
   if( !m_pCurrentActor->NextStep() )
     qDebug() << "All Step developed" << m_pCurrentActor->DetailType();
   m_pNextBlock->Evaluate( m_pCurrentActor );
-  m_pCurrentActor = m_pPrevQueue->GetActor();  //берем очередную партию деталей;
+  m_pCurrentActor = m_pPrevQueue->GetActor();  //Р±РµСЂРµРј РѕС‡РµСЂРµРґРЅСѓСЋ РїР°СЂС‚РёСЋ РґРµС‚Р°Р»РµР№;
   if( m_pCurrentActor == nullptr )
     {
     StartFree();
@@ -772,7 +771,7 @@ Time GroupEquipment::NextEventTime()
   {
   if (m_EventQueue.isEmpty()) return sc_NoTime;
 //  qDebug() << m_Name << m_EventQueue.count() << m_EventQueue.begin().key().Hour();
-  return m_EventQueue.begin().key();  //Возврашаем время ближайшего события
+  return m_EventQueue.begin().key();  //Р’РѕР·РІСЂР°С€Р°РµРј РІСЂРµРјСЏ Р±Р»РёР¶Р°Р№С€РµРіРѕ СЃРѕР±С‹С‚РёСЏ
   }
 
 bool GroupEquipment::IsTimeOff()
@@ -853,7 +852,7 @@ bool Bench::IsRepair()
   if( m_pGroup->m_RepairInterval == 0.0 || m_NextRepairTime > m_pGroup->WorkTime() ) return false;
   EndFreeTime();
   m_NextRepairTime = m_pGroup->m_RepairInterval;
-  m_RepairTime = m_pGroup->RepairTime(); //группа оборудования должна вернуть случайное число с мат ожиданием, равным времени профилактики и случайным отколнением
+  m_RepairTime = m_pGroup->RepairTime(); //РіСЂСѓРїРїР° РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЏ РґРѕР»Р¶РЅР° РІРµСЂРЅСѓС‚СЊ СЃР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ СЃ РјР°С‚ РѕР¶РёРґР°РЅРёРµРј, СЂР°РІРЅС‹Рј РІСЂРµРјРµРЅРё РїСЂРѕС„РёР»Р°РєС‚РёРєРё Рё СЃР»СѓС‡Р°Р№РЅС‹Рј РѕС‚РєРѕР»РЅРµРЅРёРµРј
   m_State = bnchRepair;
   m_NextEventTime = Time::GetCurrentTime() + m_RepairTime;
   qDebug() << GetName() << m_Id << "Repair to" << m_NextEventTime.Hour() << "Repair Time" << m_RepairTime <<
@@ -893,7 +892,7 @@ bool Bench::SetDetail()
     m_WorkTime = 0.0;
     m_pGroup->BackDetail();
     StartFreeTime();
-    return false; //Времени до конца смены не хватит для обработки детали.
+    return false; //Р’СЂРµРјРµРЅРё РґРѕ РєРѕРЅС†Р° СЃРјРµРЅС‹ РЅРµ С…РІР°С‚РёС‚ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РґРµС‚Р°Р»Рё.
     }
   m_State = bnchWork;
   m_NextEventTime = NextTime;
@@ -976,7 +975,7 @@ void Bench::StartFreeTime()
   m_StartFree = Time::GetCurrentTime();
   }
 
-Delay::Delay() : NamedBlock( Rus("Межоперационное пролеживание" )) {}
+Delay::Delay() : NamedBlock( "РњРµР¶РѕРїРµСЂР°С†РёРѕРЅРЅРѕРµ РїСЂРѕР»РµР¶РёРІР°РЅРёРµ" ) {}
 
 void Delay::Evaluate()
   {
@@ -1025,7 +1024,7 @@ void Delay::Report()
 
 Galvanic::Galvanic( ActingBlock *pPrevBlock ) : m_GroupId( 12 ) 
   { 
-  m_Name = Rus( "Цех гальванопокрытий" ); 
+  m_Name = "Р¦РµС… РіР°Р»СЊРІР°РЅРѕРїРѕРєСЂС‹С‚РёР№";
   pPrevBlock->SetNextBlock( this ); 
   }
 
@@ -1047,8 +1046,8 @@ void Galvanic::Evaluate()
 WaitWindow::WaitWindow()
   {
   QVBoxLayout *pVLayout = new QVBoxLayout;
-  setWindowTitle( Rus( " Ждите..." ) );
-  pVLayout->addWidget( new QLabel( Rus( "Идет процесс, ждите..." ) ) );
+  setWindowTitle( " Р–РґРёС‚Рµ..." );
+  pVLayout->addWidget( new QLabel( "РРґРµС‚ РїСЂРѕС†РµСЃСЃ, Р¶РґРёС‚Рµ..." ) );
   setLayout( pVLayout );
   adjustSize();
   }

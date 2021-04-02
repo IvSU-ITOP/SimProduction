@@ -1,4 +1,4 @@
-#include "SimulationObjects.h"
+п»ї#include "SimulationObjects.h"
 #include "SimulationWindow.h"
 #include <qdebug.h>
 
@@ -58,15 +58,15 @@ int main( int argc, char *argv[] )
     s_DB.setDatabaseName( "Production" );
     s_DB.setUserName("root");
     s_DB.setPassword("Sim1Production2");
-    if( !s_DB.open() ) throw Rus( "База данных не открылась" );
+    if( !s_DB.open() ) throw "Р‘Р°Р·Р° РґР°РЅРЅС‹С… РЅРµ РѕС‚РєСЂС‹Р»Р°СЃСЊ";
     ProductionState PS;
-    Generator DetailParty; //создаем партии деталей
+    Generator DetailParty; //СЃРѕР·РґР°РµРј РїР°СЂС‚РёРё РґРµС‚Р°Р»РµР№
     Adder AllEquipment( &DetailParty, NULL );
     Switch SelectPath( &AllEquipment );
     Delay LieTime;
     AllEquipment.AddPrevBlock( &LieTime );
     Terminator Quit( &SelectPath );
-    VectorQueues EquipmentQueue( &SelectPath, Rus("Очереди к оборудованию " ) );
+    VectorQueues EquipmentQueue( &SelectPath, "РћС‡РµСЂРµРґРё Рє РѕР±РѕСЂСѓРґРѕРІР°РЅРёСЋ " );
     for( int i = 1; i < 12; i++ )
       GroupEquipment *pEquipment = new GroupEquipment( i, &EquipmentQueue, &LieTime );
     Galvanic Galv( &SelectPath );
@@ -75,7 +75,7 @@ int main( int argc, char *argv[] )
     }
   catch( const QString& Msg )
     {
-    QMessageBox::critical( nullptr, Rus( "Ошибка" ), Msg );
+    QMessageBox::critical( nullptr, "РћС€РёР±РєР°", Msg );
     }
   }
 

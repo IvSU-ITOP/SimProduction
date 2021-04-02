@@ -1,4 +1,4 @@
-#include "RandomObjects.h"
+п»ї#include "RandomObjects.h"
 #include <qtextcodec.h>
 #include <QSet>
 #include <QMap>
@@ -16,7 +16,6 @@
 #include <qprogressbar.h>
 #include <qthread.h>
 #include <qtimer.h>
-#define Rus(x) pCodec->toUnicode(x)
 
 int Round( double Value );
 double Round( double Value, int Digits );
@@ -49,7 +48,7 @@ class Time
   friend class Bench;
   static double sm_ShiftLength;
   static int sm_ShiftCount;
-  static double sm_ReShift; // время пересменки 
+  static double sm_ReShift; // РІСЂРµРјСЏ РїРµСЂРµСЃРјРµРЅРєРё 
   static double sm_Precision;
   double  m_Hour;
   static Time sm_CurrentTime;
@@ -60,13 +59,13 @@ class Time
     static bool SetDayParameters(double ShiftLength, int ShiftCount, double StartDay);
     static int ShiftCount() { return sm_ShiftCount; }
     static double DobeLength() { return sm_ShiftLength * sm_ShiftCount; }
-    Time(int Day) : m_Hour(Day * 24.0) {} //переписать с контролем ошибки.
+    Time(int Day) : m_Hour(Day * 24.0) {} //РїРµСЂРµРїРёСЃР°С‚СЊ СЃ РєРѕРЅС‚СЂРѕР»РµРј РѕС€РёР±РєРё.
     Time(double Hour);
-    Time(const Time& T) : m_Hour(T.m_Hour) {}          //Реализовать можно прямо здесь.
+    Time(const Time& T) : m_Hour(T.m_Hour) {}          //Р РµР°Р»РёР·РѕРІР°С‚СЊ РјРѕР¶РЅРѕ РїСЂСЏРјРѕ Р·РґРµСЃСЊ.
     Time() : m_Hour(sc_BadTime) {}
-    Time EndCurrentShift() const;  //Время конца текущей смены. Т.е. исходный момент времени не произвольный, а должен быть в смене как в замкнутом интервале. 
-    Time NextShift() const; //Время начала следующей смены
-    int GetCurrentShift() const;//Номер текущей смены
+    Time EndCurrentShift() const;  //Р’СЂРµРјСЏ РєРѕРЅС†Р° С‚РµРєСѓС‰РµР№ СЃРјРµРЅС‹. Рў.Рµ. РёСЃС…РѕРґРЅС‹Р№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё РЅРµ РїСЂРѕРёР·РІРѕР»СЊРЅС‹Р№, Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРјРµРЅРµ РєР°Рє РІ Р·Р°РјРєРЅСѓС‚РѕРј РёРЅС‚РµСЂРІР°Р»Рµ. 
+    Time NextShift() const; //Р’СЂРµРјСЏ РЅР°С‡Р°Р»Р° СЃР»РµРґСѓСЋС‰РµР№ СЃРјРµРЅС‹
+    int GetCurrentShift() const;//РќРѕРјРµСЂ С‚РµРєСѓС‰РµР№ СЃРјРµРЅС‹
     Time& operator = (const Time&);
     Time& operator += (double);
     Time operator + (double) const;
@@ -103,8 +102,8 @@ class Route : public QVector < Step >
   double m_TotalTime;
   double m_SumLieTime;
   QString m_DetailName;
-  Time m_TimeStartParty; //Момент следующего запуска партии деталей
-  Time m_CorrectedTimeStartParty; //Момент следующего запуска партии деталей
+  Time m_TimeStartParty; //РњРѕРјРµРЅС‚ СЃР»РµРґСѓСЋС‰РµРіРѕ Р·Р°РїСѓСЃРєР° РїР°СЂС‚РёРё РґРµС‚Р°Р»РµР№
+  Time m_CorrectedTimeStartParty; //РњРѕРјРµРЅС‚ СЃР»РµРґСѓСЋС‰РµРіРѕ Р·Р°РїСѓСЃРєР° РїР°СЂС‚РёРё РґРµС‚Р°Р»РµР№
   double CalcIncomplete( int ProdCount );
   public:
     static int sm_Variant;
@@ -132,7 +131,7 @@ class Route : public QVector < Step >
     int Applicability() { return m_Applicability; }
   };
 
-class Actor // Партия деталей.
+class Actor // РџР°СЂС‚РёСЏ РґРµС‚Р°Р»РµР№.
   {
   friend class GroupEquipment;
   Time m_TimeStart;
@@ -142,7 +141,7 @@ class Actor // Партия деталей.
   int m_DetailCount;
   RNormal m_DetailWorkTime;
   RNormal m_PartyWorkTime;
-  int m_RawCount; //число необработанных деталей
+  int m_RawCount; //С‡РёСЃР»Рѕ РЅРµРѕР±СЂР°Р±РѕС‚Р°РЅРЅС‹С… РґРµС‚Р°Р»РµР№
   Time m_StartQueue;
   double m_LieTime;
   public:
@@ -253,15 +252,15 @@ class Service : public NamedBlock
       NamedBlock( Name, pRNumber ), m_pPrevQueue( (Queue *) pPrevQueue ), m_pCurrentActor(NULL)
       { pPrevQueue->SetNextBlock( this ); }
       //Service( string Name, VectorQueues *pQueues, RNumber * pRNumber );
-    //его вызывает симулятор без параметра. В тот момент, когда сервис закончил обработку очередного
-    //актора. Берём текущего актора и предаем дальше по цепочке. Если в очереди никого нет,
-    // время работы увеличиваем. Добавляем к своему времени время до события. 
+    //РµРіРѕ РІС‹Р·С‹РІР°РµС‚ СЃРёРјСѓР»СЏС‚РѕСЂ Р±РµР· РїР°СЂР°РјРµС‚СЂР°. Р’ С‚РѕС‚ РјРѕРјРµРЅС‚, РєРѕРіРґР° СЃРµСЂРІРёСЃ Р·Р°РєРѕРЅС‡РёР» РѕР±СЂР°Р±РѕС‚РєСѓ РѕС‡РµСЂРµРґРЅРѕРіРѕ
+    //Р°РєС‚РѕСЂР°. Р‘РµСЂС‘Рј С‚РµРєСѓС‰РµРіРѕ Р°РєС‚РѕСЂР° Рё РїСЂРµРґР°РµРј РґР°Р»СЊС€Рµ РїРѕ С†РµРїРѕС‡РєРµ. Р•СЃР»Рё РІ РѕС‡РµСЂРµРґРё РЅРёРєРѕРіРѕ РЅРµС‚,
+    // РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹ СѓРІРµР»РёС‡РёРІР°РµРј. Р”РѕР±Р°РІР»СЏРµРј Рє СЃРІРѕРµРјСѓ РІСЂРµРјРµРЅРё РІСЂРµРјСЏ РґРѕ СЃРѕР±С‹С‚РёСЏ. 
     virtual ServiceResult Evaluate(Actor *);
-    //эта ф-я вызывается предыдущим блоком. Актор передается из предыдущего блока. 
-    //Делается попытка передачи актора.
-    //Если текущее время события живое, то сервис занят. 
+    //СЌС‚Р° С„-СЏ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРµРґС‹РґСѓС‰РёРј Р±Р»РѕРєРѕРј. РђРєС‚РѕСЂ РїРµСЂРµРґР°РµС‚СЃСЏ РёР· РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р±Р»РѕРєР°. 
+    //Р”РµР»Р°РµС‚СЃСЏ РїРѕРїС‹С‚РєР° РїРµСЂРµРґР°С‡Рё Р°РєС‚РѕСЂР°.
+    //Р•СЃР»Рё С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ СЃРѕР±С‹С‚РёСЏ Р¶РёРІРѕРµ, С‚Рѕ СЃРµСЂРІРёСЃ Р·Р°РЅСЏС‚. 
     void SetQueue( Queue *pQueue ) { m_pPrevQueue = pQueue; pQueue->SetNextBlock(this); }
-    //Объект попадает в очередь
+    //РћР±СЉРµРєС‚ РїРѕРїР°РґР°РµС‚ РІ РѕС‡РµСЂРµРґСЊ
   };
 
 class VectorQueues : public ActingBlock, public vector<Queue*>
@@ -285,7 +284,7 @@ class Switch : public ActingBlock
 
 class Worker
   {
-  QString m_Name;  //Название профессии
+  QString m_Name;  //РќР°Р·РІР°РЅРёРµ РїСЂРѕС„РµСЃСЃРёРё
   double m_PropUnappear;
   int m_ListCount;
   static Random sm_TestAppear;
@@ -368,18 +367,18 @@ class Bench : public BaseActingBlock
   {
   friend GroupEquipment;
   friend ProductionState;
-  enum StateType { bnchRepair, bnchWork, bnchNoWorker, bnchReadjust, bnchFree }; //состояние станка
+  enum StateType { bnchRepair, bnchWork, bnchNoWorker, bnchReadjust, bnchFree }; //СЃРѕСЃС‚РѕСЏРЅРёРµ СЃС‚Р°РЅРєР°
   QMap <StateType, double> m_StateQueue;
   GroupEquipment *m_pGroup;
   int m_Id;
   double m_ReadjustmentTime;
   double m_TotalReadjustmentTime;
-  double m_RepairTime; //Время, необходимое для завершения профилактики.  Если профилактика не идет, то 0
-  double m_TotalRepairTime; //Сумма всего времени профилактики (для отчета)
-  double m_TimeNoWorker;    //Время простоя из-за отсутствия рабочего (для отчета)
-  double m_TotalWorkTime;  //Сумма всего всего времени, затраченного на обработку деталей (для отчета)
-  double m_NextRepairTime; //Плановое время начала очередной профилактики. Уменьшается после обработки каждой детали
-  double m_WorkTime; //Текущее рабочее время
+  double m_RepairTime; //Р’СЂРµРјСЏ, РЅРµРѕР±С…РѕРґРёРјРѕРµ РґР»СЏ Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРѕС„РёР»Р°РєС‚РёРєРё.  Р•СЃР»Рё РїСЂРѕС„РёР»Р°РєС‚РёРєР° РЅРµ РёРґРµС‚, С‚Рѕ 0
+  double m_TotalRepairTime; //РЎСѓРјРјР° РІСЃРµРіРѕ РІСЂРµРјРµРЅРё РїСЂРѕС„РёР»Р°РєС‚РёРєРё (РґР»СЏ РѕС‚С‡РµС‚Р°)
+  double m_TimeNoWorker;    //Р’СЂРµРјСЏ РїСЂРѕСЃС‚РѕСЏ РёР·-Р·Р° РѕС‚СЃСѓС‚СЃС‚РІРёСЏ СЂР°Р±РѕС‡РµРіРѕ (РґР»СЏ РѕС‚С‡РµС‚Р°)
+  double m_TotalWorkTime;  //РЎСѓРјРјР° РІСЃРµРіРѕ РІСЃРµРіРѕ РІСЂРµРјРµРЅРё, Р·Р°С‚СЂР°С‡РµРЅРЅРѕРіРѕ РЅР° РѕР±СЂР°Р±РѕС‚РєСѓ РґРµС‚Р°Р»РµР№ (РґР»СЏ РѕС‚С‡РµС‚Р°)
+  double m_NextRepairTime; //РџР»Р°РЅРѕРІРѕРµ РІСЂРµРјСЏ РЅР°С‡Р°Р»Р° РѕС‡РµСЂРµРґРЅРѕР№ РїСЂРѕС„РёР»Р°РєС‚РёРєРё. РЈРјРµРЅСЊС€Р°РµС‚СЃСЏ РїРѕСЃР»Рµ РѕР±СЂР°Р±РѕС‚РєРё РєР°Р¶РґРѕР№ РґРµС‚Р°Р»Рё
+  double m_WorkTime; //РўРµРєСѓС‰РµРµ СЂР°Р±РѕС‡РµРµ РІСЂРµРјСЏ
   Time m_StartFree;
   double m_TotalFreeTime;
   StateType m_State;
@@ -414,8 +413,8 @@ class GroupEquipment : public Service
   double m_TotalWorkFund;
   double m_TotalReadjustmentTime;
   double m_TotalRepairTime;
-  double m_TimeNoWorker;    //Время простоя из-за отсутствия рабочего (для отчета)
-  double m_TotalWorkTime;  //Сумма всего всего времени, затраченного на обработку деталей (для отчета)
+  double m_TimeNoWorker;    //Р’СЂРµРјСЏ РїСЂРѕСЃС‚РѕСЏ РёР·-Р·Р° РѕС‚СЃСѓС‚СЃС‚РІРёСЏ СЂР°Р±РѕС‡РµРіРѕ (РґР»СЏ РѕС‚С‡РµС‚Р°)
+  double m_TotalWorkTime;  //РЎСѓРјРјР° РІСЃРµРіРѕ РІСЃРµРіРѕ РІСЂРµРјРµРЅРё, Р·Р°С‚СЂР°С‡РµРЅРЅРѕРіРѕ РЅР° РѕР±СЂР°Р±РѕС‚РєСѓ РґРµС‚Р°Р»РµР№ (РґР»СЏ РѕС‚С‡РµС‚Р°)
   double m_TotalFreeTime;
   void BackDetail() { m_pCurrentActor->m_RawCount++; }
   void StartFree();
@@ -427,7 +426,7 @@ class GroupEquipment : public Service
     double RepairTime();
     double NoWorkerTime() { return 0.0;  }
     double WorkTime();
-    double ReadjustmentTime();  //Время переналадки;
+    double ReadjustmentTime();  //Р’СЂРµРјСЏ РїРµСЂРµРЅР°Р»Р°РґРєРё;
     Bench::StateType GetDetail( Bench &Bench );
     Time NextEventTime();
     bool IsTimeOff();

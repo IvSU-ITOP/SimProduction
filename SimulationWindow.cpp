@@ -1,4 +1,4 @@
-#include "SimulationWindow.h"
+ï»¿#include "SimulationWindow.h"
 #include "SimulationObjects.h"
 #include "qheaderview.h"
 
@@ -8,18 +8,18 @@ extern QSqlDatabase s_DB;
 MainWindow::MainWindow ()
 {
   setWindowState (Qt::WindowMaximized);
-  QMenu *pMenuBase = new QMenu (Rus ("&Ìîäåëèðîâàíèå"));
-  pMenuBase->addAction (Rus ("&Ââåñòè îñíîâíûå ïàðàìåòðû..."), this, SLOT (slotOpenDialog ()), QKeySequence ("CTRL+D"));
-  m_pModeling = pMenuBase->addAction (Rus ("&Íà÷àòü ìîäåëèðîâàíèå "), this, SLOT (slotOpenSumulation ()), QKeySequence ("CTRL+S"));
+  QMenu *pMenuBase = new QMenu ("&ÐœÐ¾Ð´ÐµÐ»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ");
+  pMenuBase->addAction ("&Ð’Ð²ÐµÑÑ‚Ð¸ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹...", this, SLOT (slotOpenDialog ()), QKeySequence ("CTRL+D"));
+  m_pModeling = pMenuBase->addAction ("&ÐÐ°Ñ‡Ð°Ñ‚ÑŒ Ð¼Ð¾Ð´ÐµÐ»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ ", this, SLOT (slotOpenSumulation ()), QKeySequence ("CTRL+S"));
   menuBar ()->addMenu (pMenuBase);
-  pMenuBase->addAction (Rus ("&Êîíåö ðàáîòû "), qApp, SLOT (quit ()), QKeySequence ("CTRL+Q"));
+  pMenuBase->addAction ("&ÐšÐ¾Ð½ÐµÑ† Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ ", qApp, SLOT (quit ()), QKeySequence ("CTRL+Q"));
   menuBar ()->addMenu (pMenuBase);
-  QMenu *pMenuTable = new QMenu (Rus ("&Òàáëèöû"));
-  m_pTableNine = pMenuTable->addAction (Rus ("Îòîáðàçèòü Òàáëèöó 9..."), this, SLOT (slotShowTableNine ()), QKeySequence ("CTRL+N"));
-  m_pTableTen = pMenuTable->addAction (Rus ("Îòîáðàçèòü Òàáëèöó 10..."), this, SLOT (slotShowTableTen ()), QKeySequence ("CTRL+T"));
-  m_pMachineChartOne = pMenuTable->addAction (Rus ("Îòîáðàçèòü Ìàøèíîãðàììó ¹1..."), this, SLOT (slotShowMachineChartOne ()), QKeySequence ("CTRL+O"));
-  m_pMachineChartTwo = pMenuTable->addAction (Rus ("Îòîáðàçèòü Ìàøèíîãðàììó ¹2..."), this, SLOT (slotShowMachineChartTwo ()), QKeySequence ("CTRL+M"));
-  m_pMachineChartFour = pMenuTable->addAction (Rus ("Îòîáðàçèòü Ìàøèíîãðàììó ¹4..."), this, SLOT (slotShowMachineChartFour ()), QKeySequence ("CTRL+F"));
+  QMenu *pMenuTable = new QMenu ("&Ð¢Ð°Ð±Ð»Ð¸Ñ†Ñ‹");
+  m_pTableNine = pMenuTable->addAction ("ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð·Ð¸Ñ‚ÑŒ Ð¢Ð°Ð±Ð»Ð¸Ñ†Ñƒ 9...", this, SLOT (slotShowTableNine ()), QKeySequence ("CTRL+N"));
+  m_pTableTen = pMenuTable->addAction ("ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð·Ð¸Ñ‚ÑŒ Ð¢Ð°Ð±Ð»Ð¸Ñ†Ñƒ 10...", this, SLOT (slotShowTableTen ()), QKeySequence ("CTRL+T"));
+  m_pMachineChartOne = pMenuTable->addAction ("ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð·Ð¸Ñ‚ÑŒ ÐœÐ°ÑˆÐ¸Ð½Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñƒ â„–1...", this, SLOT (slotShowMachineChartOne ()), QKeySequence ("CTRL+O"));
+  m_pMachineChartTwo = pMenuTable->addAction ("ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð·Ð¸Ñ‚ÑŒ ÐœÐ°ÑˆÐ¸Ð½Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñƒ â„–2...", this, SLOT (slotShowMachineChartTwo ()), QKeySequence ("CTRL+M"));
+  m_pMachineChartFour = pMenuTable->addAction ("ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð·Ð¸Ñ‚ÑŒ ÐœÐ°ÑˆÐ¸Ð½Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ñƒ â„–4...", this, SLOT (slotShowMachineChartFour ()), QKeySequence ("CTRL+F"));
   m_pModeling->setEnabled (false);
   m_pTableNine->setEnabled (false);
   m_pTableTen->setEnabled (false);
@@ -53,12 +53,12 @@ void MainWindow::slotShowTableNine ()
     QSqlQuery Query;
     QTableView *pView = new QTableView;
     QSqlQueryModel *pModel = new QSqlQueryModel;
-    QString m_SQLQuery = Rus (" SELECT [Íîìåð_èçäåëèÿ], [Íîìåð_äåòàëè], [Ïðèìåíÿåìîñòü], ") +
-      Rus (" (SELECT[Êîëè÷åñòâî, øò.]  from [Âàðèàíòû] where [Íîìåð_âàðèàíòà] = ") + QString::number (Route::sm_Variant) +
-      Rus (" and [Âàðèàíòû].[Íîìåð_èçäåëèÿ] = [Ñîñòàâ_èçäåëèÿ].[Íîìåð_èçäåëèÿ]) as [Ïëàí ïðîèçâîäñòâà èçäåëèé],") +
-      Rus (" (SELECT[Êîëè÷åñòâî, øò.]  from [Âàðèàíòû] where [Íîìåð âàðèàíòà] = ") + QString::number (Route::sm_Variant) + 
-      Rus (" and [Âàðèàíòû].[Íîìåð èçäåëèÿ] = [Ñîñòàâ_èçäåëèÿ].[Íîìåð_èçäåëèÿ])  * [Ïðèìåíÿåìîñòü] as[Ïëàí ïðîèçâîäñòâà äåòàëåé] ") +
-      Rus ("from[Ñîñòàâ_èçäåëèÿ] ");
+    QString m_SQLQuery = " SELECT [ÐÐ¾Ð¼ÐµÑ€_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ], [ÐÐ¾Ð¼ÐµÑ€_Ð´ÐµÑ‚Ð°Ð»Ð¸], [ÐŸÑ€Ð¸Ð¼ÐµÐ½ÑÐµÐ¼Ð¾ÑÑ‚ÑŒ], \
+      (SELECT[ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾, ÑˆÑ‚.]  from [Ð’Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹] where [ÐÐ¾Ð¼ÐµÑ€_Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ð°] = " + QString::number (Route::sm_Variant) +
+      " and [Ð’Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹].[ÐÐ¾Ð¼ÐµÑ€_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ] = [Ð¡Ð¾ÑÑ‚Ð°Ð²_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ].[ÐÐ¾Ð¼ÐµÑ€_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ]) as [ÐŸÐ»Ð°Ð½ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²Ð° Ð¸Ð·Ð´ÐµÐ»Ð¸Ð¹]," +
+      " (SELECT[ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾, ÑˆÑ‚.]  from [Ð’Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹] where [ÐÐ¾Ð¼ÐµÑ€ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ð°] = " + QString::number (Route::sm_Variant) +
+      " and [Ð’Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹].[ÐÐ¾Ð¼ÐµÑ€ Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ] = [Ð¡Ð¾ÑÑ‚Ð°Ð²_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ].[ÐÐ¾Ð¼ÐµÑ€_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ])  * [ÐŸÑ€Ð¸Ð¼ÐµÐ½ÑÐµÐ¼Ð¾ÑÑ‚ÑŒ] as[ÐŸÐ»Ð°Ð½ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²Ð° Ð´ÐµÑ‚Ð°Ð»ÐµÐ¹] " +
+      "from[Ð¡Ð¾ÑÑ‚Ð°Ð²_Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ] ";
     Query.exec (m_SQLQuery);
     pModel->setQuery (m_SQLQuery);
     pView->setModel (pModel);
@@ -69,11 +69,11 @@ void MainWindow::slotShowTableTen ()
 {
   QTableWidget *tbl = new QTableWidget (8, 12);
   QStringList lst;
-  lst << Rus ("Íàçâàíèå äåòàëè") << Rus ("Ñóììàðíîå âðåìÿ \n (øòó÷íîå)") << Rus ("Ñóììàðíîå âðåìÿ \n ïîäãîòîâèòåëüíî-\nçàêëþ÷èòåëüíîå")
-    << Rus ("Ðàçìåð ïàðòèè \n ïðåäâàðèòåëüíûé") << Rus ("Ðàçìåð ïàðòèè \nïðèíÿòûé ") << Rus ("Âðåìÿ âûïîëíåíèÿ\n òåõíîëîãè÷åñêèõ\n îïåðàöèé ")
-    << Rus ("Ñóììàðíîå âðåìÿ\n ìåæîïåðàöèîííîãî \n ïðîëåæèâàíèÿ") << Rus ("Äëèòåëüíîñòü \nïðîèçâîäñòâåííîãî\n öèêëà\n íà ïðîåêòèðóåìîì\n ó÷àñòêå (÷àñ.)")
-    << Rus ("Äëèòåëüíîñòü \n  ïðîèçâîäñòâåííîãî  \n öèêëà \níà ïðîåêòèðóåìîì\n ó÷àñòêå (ñóò.)") << Rus ("Âðåìÿ îáðàáîòêè \nâ äðóãèõ \nöåõàõ (÷àñ)")
-    << Rus ("Âðåìÿ îáðàáîòêè\n â äðóãèõ \nöåõàõ (ñóò.)") << Rus ("Îáøàÿ äëèòåëüíîñòü\n ïðîèçâîäñòâåííîãî\n öèêëà (ñóò.)");
+  lst << "ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð´ÐµÑ‚Ð°Ð»Ð¸" << "Ð¡ÑƒÐ¼Ð¼Ð°Ñ€Ð½Ð¾Ðµ Ð²Ñ€ÐµÐ¼Ñ \n (ÑˆÑ‚ÑƒÑ‡Ð½Ð¾Ðµ)" << "Ð¡ÑƒÐ¼Ð¼Ð°Ñ€Ð½Ð¾Ðµ Ð²Ñ€ÐµÐ¼Ñ \n Ð¿Ð¾Ð´Ð³Ð¾Ñ‚Ð¾Ð²Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾-\nÐ·Ð°ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾Ðµ"
+    << "Ð Ð°Ð·Ð¼ÐµÑ€ Ð¿Ð°Ñ€Ñ‚Ð¸Ð¸ \n Ð¿Ñ€ÐµÐ´Ð²Ð°Ñ€Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¹" << "Ð Ð°Ð·Ð¼ÐµÑ€ Ð¿Ð°Ñ€Ñ‚Ð¸Ð¸ \nÐ¿Ñ€Ð¸Ð½ÑÑ‚Ñ‹Ð¹ " << "Ð’Ñ€ÐµÐ¼Ñ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ñ\n Ñ‚ÐµÑ…Ð½Ð¾Ð»Ð¾Ð³Ð¸Ñ‡ÐµÑÐºÐ¸Ñ…\n Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¹ "
+    << "Ð¡ÑƒÐ¼Ð¼Ð°Ñ€Ð½Ð¾Ðµ Ð²Ñ€ÐµÐ¼Ñ\n Ð¼ÐµÐ¶Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¾Ð½Ð½Ð¾Ð³Ð¾ \n Ð¿Ñ€Ð¾Ð»ÐµÐ¶Ð¸Ð²Ð°Ð½Ð¸Ñ" << "Ð”Ð»Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ \nÐ¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð³Ð¾\n Ñ†Ð¸ÐºÐ»Ð°\n Ð½Ð° Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð¸Ñ€ÑƒÐµÐ¼Ð¾Ð¼\n ÑƒÑ‡Ð°ÑÑ‚ÐºÐµ (Ñ‡Ð°Ñ.)"
+    << "Ð”Ð»Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ \n  Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð³Ð¾  \n Ñ†Ð¸ÐºÐ»Ð° \nÐ½Ð° Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð¸Ñ€ÑƒÐµÐ¼Ð¾Ð¼\n ÑƒÑ‡Ð°ÑÑ‚ÐºÐµ (ÑÑƒÑ‚.)" << "Ð’Ñ€ÐµÐ¼Ñ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ¸ \nÐ² Ð´Ñ€ÑƒÐ³Ð¸Ñ… \nÑ†ÐµÑ…Ð°Ñ… (Ñ‡Ð°Ñ)"
+    << "Ð’Ñ€ÐµÐ¼Ñ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ¸\n Ð² Ð´Ñ€ÑƒÐ³Ð¸Ñ… \nÑ†ÐµÑ…Ð°Ñ… (ÑÑƒÑ‚.)" << "ÐžÐ±ÑˆÐ°Ñ Ð´Ð»Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ\n Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð³Ð¾\n Ñ†Ð¸ÐºÐ»Ð° (ÑÑƒÑ‚.)";
   tbl->setHorizontalHeaderLabels (lst);
   tbl->horizontalHeader()->setSectionResizeMode( QHeaderView::Stretch );
   QTableWidgetItem *pi = 0;
@@ -126,10 +126,10 @@ void MainWindow::slotShowMachineChartOne()
   QTableWidget *tbl = new QTableWidget( 4, 10 );
   QTableWidgetItem *pi = 0;
   QStringList lst;
-  lst << Rus( "Íîìåð èçäåëèÿ" ) << Rus( "Ïëàí" ) << Rus( "Ôàêò" )
-    << Rus( "Îòêëîíåíèå" ) << Rus( "Íåêîìïëåêòîâàííûå\n äåòàëè" ) << Rus( "Íåêîìïëåêòîâàííûå\n äåòàëè" )
-    << Rus( "Íåêîìïëåêòîâàííûå\n äåòàëè " ) << Rus( "Ïîòðåáíîñòü äî  \n ïëàíîâîãî îáúåìà" )
-    << Rus( "Ïîòðåáíîñòü äî  \n ïëàíîâîãî îáúåìà" ) << Rus( "Ïîòðåáíîñòü äî  \n ïëàíîâîãî îáúåìà" );
+  lst << "ÐÐ¾Ð¼ÐµÑ€ Ð¸Ð·Ð´ÐµÐ»Ð¸Ñ" << "ÐŸÐ»Ð°Ð½" <<  "Ð¤Ð°ÐºÑ‚"
+    << "ÐžÑ‚ÐºÐ»Ð¾Ð½ÐµÐ½Ð¸Ðµ" << "ÐÐµÐºÐ¾Ð¼Ð¿Ð»ÐµÐºÑ‚Ð¾Ð²Ð°Ð½Ð½Ñ‹Ðµ\n Ð´ÐµÑ‚Ð°Ð»Ð¸" << "ÐÐµÐºÐ¾Ð¼Ð¿Ð»ÐµÐºÑ‚Ð¾Ð²Ð°Ð½Ð½Ñ‹Ðµ\n Ð´ÐµÑ‚Ð°Ð»Ð¸"
+    << "ÐÐµÐºÐ¾Ð¼Ð¿Ð»ÐµÐºÑ‚Ð¾Ð²Ð°Ð½Ð½Ñ‹Ðµ\n Ð´ÐµÑ‚Ð°Ð»Ð¸ " << "ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð½Ð¾ÑÑ‚ÑŒ Ð´Ð¾  \n Ð¿Ð»Ð°Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¾Ð±ÑŠÐµÐ¼Ð°"
+    << "ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð½Ð¾ÑÑ‚ÑŒ Ð´Ð¾  \n Ð¿Ð»Ð°Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¾Ð±ÑŠÐµÐ¼Ð°"  << "ÐŸÐ¾Ñ‚Ñ€ÐµÐ±Ð½Ð¾ÑÑ‚ÑŒ Ð´Ð¾  \n Ð¿Ð»Ð°Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¾Ð±ÑŠÐµÐ¼Ð°";
   tbl->setHorizontalHeaderLabels( lst );
   tbl->horizontalHeader()->setSectionResizeMode( QHeaderView::Stretch );
   QMap<int, Incomplete> &IP = ProductionState::sm_pProductionState->m_IncompleteProduction;
@@ -215,9 +215,9 @@ void MainWindow::slotShowMachineChartTwo()
   QTableWidget *pTbl = new QTableWidget( 8, 8 );
   QTableWidgetItem *pItem = 0;
   QStringList Lst;
-  Lst << Rus( "Íàçâàíèå äåòàëè" ) << Rus( "ÍÇÏ íà íà÷àëî" ) << Rus( "Ãîòîâûå äåòàëè \n íà íà÷àëî" )
-    << Rus( "Çàïóñê" ) << Rus( "ÍÇÏ íà êîíåö" ) << Rus( "Ãîòîâûå äåòàëè \n íà êîíåö" )
-    << Rus( "Äåòàëåé â èçäåëèÿõ" ) << Rus( "Áàëàíñ \n Í - Ê" );
+  Lst << "ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð´ÐµÑ‚Ð°Ð»Ð¸" <<  "ÐÐ—ÐŸ Ð½Ð° Ð½Ð°Ñ‡Ð°Ð»Ð¾"  <<  "Ð“Ð¾Ñ‚Ð¾Ð²Ñ‹Ðµ Ð´ÐµÑ‚Ð°Ð»Ð¸ \n Ð½Ð° Ð½Ð°Ñ‡Ð°Ð»Ð¾"
+    <<  "Ð—Ð°Ð¿ÑƒÑÐº" << "ÐÐ—ÐŸ Ð½Ð° ÐºÐ¾Ð½ÐµÑ†"  <<  "Ð“Ð¾Ñ‚Ð¾Ð²Ñ‹Ðµ Ð´ÐµÑ‚Ð°Ð»Ð¸ \n Ð½Ð° ÐºÐ¾Ð½ÐµÑ†"
+    << "Ð”ÐµÑ‚Ð°Ð»ÐµÐ¹ Ð² Ð¸Ð·Ð´ÐµÐ»Ð¸ÑÑ…" << "Ð‘Ð°Ð»Ð°Ð½Ñ \n Ð - Ðš";
   pTbl->setHorizontalHeaderLabels( Lst );
   pTbl->horizontalHeader()->setSectionResizeMode( QHeaderView::Stretch );
   int i = 0;
@@ -264,9 +264,9 @@ void MainWindow::slotShowMachineChartFour ()
   QTableWidget *tbl = new QTableWidget (11, 9);
   QTableWidgetItem *pItem = 0;
   QStringList lst;
-  lst << Rus ("Íàèìåíîâàíèå ãðóïïû\n îáîðóäîâàíèÿ") << Rus ("Ðåæèìíûé ôîíä\n âðåìåíè") << Rus ("Îáùèé ôîíä\n âðåìåíè")
-    << Rus ("Âðåìÿ ðåìîíòà\n îáîðóäîâàíèÿ") << Rus ("Ïðîñòîè ïî ïðè÷èíå\n îòñòóòñòâèÿ ðàáî÷èõ") << Rus ("Âðåìÿ ïðîñòîÿ\n îáîðóäîâàíèÿ")
-    << Rus ("Âðåìÿ íà ïåðåíàëàäêó\n îáîðóäîâàíèÿ") << Rus ("Âðåìÿ ðàáîòû") << Rus ("Îáùåå âðåìÿ\n ðàáîòû");
+  lst << "ÐÐ°Ð¸Ð¼ÐµÐ½Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹\n Ð¾Ð±Ð¾Ñ€ÑƒÐ´Ð¾Ð²Ð°Ð½Ð¸Ñ" << "Ð ÐµÐ¶Ð¸Ð¼Ð½Ñ‹Ð¹ Ñ„Ð¾Ð½Ð´\n Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸" << "ÐžÐ±Ñ‰Ð¸Ð¹ Ñ„Ð¾Ð½Ð´\n Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸"
+    << "Ð’Ñ€ÐµÐ¼Ñ Ñ€ÐµÐ¼Ð¾Ð½Ñ‚Ð°\n Ð¾Ð±Ð¾Ñ€ÑƒÐ´Ð¾Ð²Ð°Ð½Ð¸Ñ" << "ÐŸÑ€Ð¾ÑÑ‚Ð¾Ð¸ Ð¿Ð¾ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ðµ\n Ð¾Ñ‚ÑÑ‚ÑƒÑ‚ÑÑ‚Ð²Ð¸Ñ Ñ€Ð°Ð±Ð¾Ñ‡Ð¸Ñ…" << "Ð’Ñ€ÐµÐ¼Ñ Ð¿Ñ€Ð¾ÑÑ‚Ð¾Ñ\n Ð¾Ð±Ð¾Ñ€ÑƒÐ´Ð¾Ð²Ð°Ð½Ð¸Ñ"
+    << "Ð’Ñ€ÐµÐ¼Ñ Ð½Ð° Ð¿ÐµÑ€ÐµÐ½Ð°Ð»Ð°Ð´ÐºÑƒ\n Ð¾Ð±Ð¾Ñ€ÑƒÐ´Ð¾Ð²Ð°Ð½Ð¸Ñ" << "Ð’Ñ€ÐµÐ¼Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹" << "ÐžÐ±Ñ‰ÐµÐµ Ð²Ñ€ÐµÐ¼Ñ\n Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹";
   tbl->setHorizontalHeaderLabels (lst);
   tbl->horizontalHeader ()->setSectionResizeMode (QHeaderView::Stretch);
   int i = 0;
@@ -311,47 +311,47 @@ m_pShiftCount( new QSpinBox ), m_pStartDay( new QDoubleSpinBox ),
 m_pTimeSimulation( new QSpinBox ), m_pVariant( new QSpinBox )
   {
   QSqlQuery Query;
-  Query.exec( Rus( "SELECT  min([Íîìåð âàðèàíòà]), max([Íîìåð âàðèàíòà]) FROM Âàðèàíòû" ) );
+  Query.exec( "SELECT  min([ÐÐ¾Ð¼ÐµÑ€ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ð°]), max([ÐÐ¾Ð¼ÐµÑ€ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ð°]) FROM Ð’Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹" );
   Query.next();
   QVBoxLayout *pVLayout = new QVBoxLayout;
   QBoxLayout *pHLayout = new QHBoxLayout;
-  pHLayout->addWidget( new QLabel( Rus( "Ââåäèòå íîìåð Âàøåãî âàðèàíòà" ) ) );
+  pHLayout->addWidget( new QLabel( "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð½Ð¾Ð¼ÐµÑ€ Ð’Ð°ÑˆÐµÐ³Ð¾ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ð°" ) );
   pHLayout->addWidget( m_pVariant );
   m_pVariant->setMaximum( Query.value( 1 ).toInt() );
   m_pVariant->setMinimum( Query.value( 0 ).toInt() );
   pVLayout->addLayout( pHLayout );
   pHLayout = new QHBoxLayout;
-  pHLayout->addWidget( new QLabel( Rus( "Ââåäèòå äëèíó ñìåíû " ) ) );
+  pHLayout->addWidget( new QLabel( "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð´Ð»Ð¸Ð½Ñƒ ÑÐ¼ÐµÐ½Ñ‹ " ) );
   pHLayout->addWidget( m_pShiftLength );
   m_pShiftLength->setMaximum( 14 );
   m_pShiftLength->setMinimum( 3 );
   m_pShiftLength->setValue( Time::sm_ShiftLength );
   pVLayout->addLayout( pHLayout );
   pHLayout = new QHBoxLayout;
-  pHLayout->addWidget( new QLabel( Rus( "Ââåäèòå êîëè÷åñòâî ñìåí " ) ) );
+  pHLayout->addWidget( new QLabel( "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ¼ÐµÐ½ " ) );
   pHLayout->addWidget( m_pShiftCount );
   m_pShiftCount->setMaximum( 3 );
   m_pShiftCount->setMinimum( 1 );
   m_pShiftCount->setValue( Time::sm_ShiftCount );
   pVLayout->addLayout( pHLayout );
   pHLayout = new QHBoxLayout;
-  pHLayout->addWidget( new QLabel( Rus( "Ââåäèòå âðåìÿ íà÷àëà ðàáî÷åãî äíÿ " ) ) );
+  pHLayout->addWidget( new QLabel( "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð²Ñ€ÐµÐ¼Ñ Ð½Ð°Ñ‡Ð°Ð»Ð° Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐ³Ð¾ Ð´Ð½Ñ " ) );
   pHLayout->addWidget( m_pStartDay );
   m_pStartDay->setMaximum( 12 );
   m_pStartDay->setMinimum( 5 );
   m_pStartDay->setValue( Time::sm_StartWork );
   pVLayout->addLayout( pHLayout );
   pHLayout = new QHBoxLayout;
-  pHLayout->addWidget( new QLabel( Rus( "Ââåäèòå ïðîäîëæèòåëüíîñòü ñèìóëÿöèè" ) ) );
+  pHLayout->addWidget( new QLabel( "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿Ñ€Ð¾Ð´Ð¾Ð»Ð¶Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ ÑÐ¸Ð¼ÑƒÐ»ÑÑ†Ð¸Ð¸" ) );
   pHLayout->addWidget( m_pTimeSimulation );
   pVLayout->addLayout( pHLayout );
   pHLayout = new QHBoxLayout;
   m_pTimeSimulation->setMaximum( 120 );
   m_pTimeSimulation->setMinimum( 24 );
   m_pTimeSimulation->setValue( ProductionState::sm_WorkDayCount );
-  QPushButton *pCancel = new QPushButton( Rus( "Îòìåíà" ) );
+  QPushButton *pCancel = new QPushButton( "ÐžÑ‚Ð¼ÐµÐ½Ð°" );
   pHLayout->addWidget( pCancel );
-  QPushButton *pSelect = new QPushButton( Rus( "Ñîõðàíèòü" ) );
+  QPushButton *pSelect = new QPushButton( "Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ" );
   pHLayout->addWidget( pSelect );
   pVLayout->addLayout( pHLayout );
   setLayout( pVLayout );
@@ -362,7 +362,7 @@ m_pTimeSimulation( new QSpinBox ), m_pVariant( new QSpinBox )
 void DlgInputParms::accept ()
 {
   Time::SetDayParameters (m_pShiftLength->value (), m_pShiftCount->value (), m_pStartDay->value ());
-  double TimeAfterStartDay = 24.0 - Time::sm_StartWork; //Âðåìÿ, ïðîøåäøåå îò íà÷àëà ïîñëåäíåãî ðàáî÷åãî äíÿ. 
+  double TimeAfterStartDay = 24.0 - Time::sm_StartWork; //Ð’Ñ€ÐµÐ¼Ñ, Ð¿Ñ€Ð¾ÑˆÐµÐ´ÑˆÐµÐµ Ð¾Ñ‚ Ð½Ð°Ñ‡Ð°Ð»Ð° Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÐµÐ³Ð¾ Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐ³Ð¾ Ð´Ð½Ñ. 
   double TimeAfterEndLastShift = TimeAfterStartDay - Time::DobeLength ();
   ProductionState::sm_WorkDayCount = m_pTimeSimulation->value();
   Simulator::sm_End = ceil( ProductionState::sm_WorkDayCount * 24.0 - TimeAfterEndLastShift - Time::sm_ReShift );

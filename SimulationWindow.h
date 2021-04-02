@@ -20,8 +20,6 @@
 #include <QDialog>
 #include <QTableWidget>
 
-#define Rus(x) pCodec->toUnicode(x)
-
 class MainWindow : public QMainWindow 
 {
   Q_OBJECT
