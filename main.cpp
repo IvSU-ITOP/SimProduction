@@ -58,7 +58,7 @@ int main( int argc, char *argv[] )
     s_DB.setDatabaseName( "Production" );
     s_DB.setUserName("root");
     s_DB.setPassword("Sim1Production2");
-    if( !s_DB.open() ) throw "База данных не открылась";
+    if( !s_DB.open() ) throw QString("База данных не открылась");
     ProductionState PS;
     Generator DetailParty; //создаем партии деталей
     Adder AllEquipment( &DetailParty, NULL );
