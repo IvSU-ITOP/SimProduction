@@ -162,7 +162,7 @@ void Generator::Evaluate()
 
  void NamedBlock::StartWork()
    {
-   qDebug() << "StarWork Next Event Time" << NextEventTime().Hour() << m_Name;
+   qDebug() << "Начало работы следущего времени события" << NextEventTime().Hour() << m_Name;
    }
 
  Adder::Adder(ActingBlock *pPrevBlock, ...)
