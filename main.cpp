@@ -16,19 +16,19 @@ void MessageOutput( QtMsgType type, const QMessageLogContext &context, const QSt
   switch( type )
     {
     case QtDebugMsg:
-      s_LogFile.write( "Debug: " + localMsg + "\r\n" );
+      s_LogFile.write( "Отладочное сообщение: " + localMsg + "\r\n" );
       break;
     case QtInfoMsg:
-      s_LogFile.write( "Info: " + localMsg + "\r\n" );
+      s_LogFile.write( "Информация: " + localMsg + "\r\n" );
       break;
     case QtWarningMsg:
-      s_LogFile.write( "Warning: " + localMsg + "\r\n" );
+      s_LogFile.write( "Предупреждение: " + localMsg + "\r\n" );
       break;
     case QtCriticalMsg:
-      s_LogFile.write( "Critical: " + localMsg + "\r\n" );
+      s_LogFile.write( "Ошибка: " + localMsg + "\r\n" );
       break;
     case QtFatalMsg:
-      s_LogFile.write( "Fatal: " + localMsg + "\r\n" );
+      s_LogFile.write( "Фатальная ошибка: " + localMsg + "\r\n" );
       abort();
     }
   s_LogFile.flush();
@@ -39,6 +39,10 @@ uLong Random::m_C = 0;
 double Random::m_Scale = 0.0;
 uLong Random::m_Next = 0;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 74449217a985ddc26bacb84b61ecea85d6eb9b97
 int main( int argc, char *argv[] )
   {
   s_LogFile.open( QIODevice::WriteOnly );

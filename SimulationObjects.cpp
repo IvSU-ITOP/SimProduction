@@ -162,7 +162,7 @@ void Generator::Evaluate()
 
  void NamedBlock::StartWork()
    {
-   qDebug() << "StarWork Next Event Time" << NextEventTime().Hour() << m_Name;
+   qDebug() << "Начало работы следущего времени события" << NextEventTime().Hour() << m_Name;
    }
 
  Adder::Adder(ActingBlock *pPrevBlock, ...)
@@ -183,7 +183,7 @@ ServiceResult Queue::Evaluate(Actor *pA)
   if( R != IsBusy ) return R;
   if( m_Actors.empty() )
     m_TimeStart = Time::GetCurrentTime();
-  qDebug() << "Queue? Type " << pA->DetailType() << "Addr " << pA << "Block" <<  m_pNextBlock->GetName();
+  qDebug() << "Очередь? Тип " << pA->DetailType() << "Адрес " << pA << "Блок" <<  m_pNextBlock->GetName();
   m_Actors.push_back( pA );
   m_MaxLen = max( m_MaxLen, m_Actors.size() );
   return Success;
