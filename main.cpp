@@ -40,9 +40,13 @@ double Random::m_Scale = 0.0;
 uLong Random::m_Next = 0;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 74449217a985ddc26bacb84b61ecea85d6eb9b97
+=======
+
+>>>>>>> 7fe4a92a5e29391783df20fdcf72d98e6b77f881
 int main( int argc, char *argv[] )
   {
   s_LogFile.open( QIODevice::WriteOnly );
