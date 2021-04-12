@@ -39,8 +39,6 @@ uLong Random::m_C = 0;
 double Random::m_Scale = 0.0;
 uLong Random::m_Next = 0;
 
-extern QTextCodec *pCodec;
-
 int main( int argc, char *argv[] )
   {
   s_LogFile.open( QIODevice::WriteOnly );
