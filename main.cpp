@@ -39,31 +39,18 @@ uLong Random::m_C = 0;
 double Random::m_Scale = 0.0;
 uLong Random::m_Next = 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 74449217a985ddc26bacb84b61ecea85d6eb9b97
-=======
-
->>>>>>> 7fe4a92a5e29391783df20fdcf72d98e6b77f881
 int main( int argc, char *argv[] )
   {
   s_LogFile.open( QIODevice::WriteOnly );
   qInstallMessageHandler( MessageOutput );
   QStringList paths = QCoreApplication::libraryPaths();
-  paths.append( "." );
-  paths.append( "imageformats" );
-  paths.append( "platforms" );
-  paths.append( "sqldrivers" );
-  QCoreApplication::setLibraryPaths( paths );
   QApplication a( argc, argv );
   MainWindow Wnd;
   try
     {
-    s_DB.setDatabaseName( "Production" );
+    s_DB.setDatabaseName( "production" );
     s_DB.setUserName("root");
-    s_DB.setPassword("Sim1Production2");
+    s_DB.setPassword("Juzefa1Niedzw2");
     if( !s_DB.open() ) throw QString("База данных не открылась");
     ProductionState PS;
     Generator DetailParty; //создаем партии деталей

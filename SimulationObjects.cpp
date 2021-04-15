@@ -391,9 +391,9 @@ void ProductionState::Evaluate()
       pActing = m_ActingBlocks.erase( pActing );
   m_Ware.clear();
   QSqlQuery Query;
-  QString RusQuery = QString("SELECT Номер_изделия, Наименование_изделия, Цена_изделия, Количество,_шт. from Варианты") +
-     "Inner Join Изделия ON Варианты. Номер изделия = " +
-    "Изделия.Номер_изделия where [Номер варианта] = " + QString::number( Route::sm_Variant );
+  QString RusQuery = QString("SELECT Номер_изделия, Наименование_изделия, Цена_изделия, Количество_шт from Варианты") +
+     "Inner Join Изделия ON Варианты.Номер_изделия = " +
+    "Изделия.Номер_изделия where Номер_варианта = " + QString::number( Route::sm_Variant );
   Query.exec( RusQuery );
   if( Query.lastError().isValid() )
     throw "Ошибка при выполнении запроса: " + Query.lastError().text();
@@ -466,9 +466,9 @@ void Route::StartWork()
   m_VolumeParty = QInputDialog::getInt( nullptr,  "Ввод объема партии" ,  "Деталь: "  + m_DetailName +
     ", предв. объем партии: "  + QString::number( m_PrelVolumeParty ), iPrelPartVol, iPrelPartVol );
   m_TotalTime = ( m_SumDetailTime * m_VolumeParty + m_SumReadjustmentTime + m_SumLieTime + m_SumGalvanic ) / Time::DobeLength();
-  QString RusQuery = "SELECT [Количество, шт.], [Применяемость], Варианты.[Номер изделия] from Варианты \
-    Inner Join Состав_изделия ON Варианты.[Номер изделия] =  \
-    Состав_изделия.Номер_изделия where [Номер варианта] = "  +
+  QString RusQuery = "SELECT Количество_шт, Применяемость, Варианты.Номер_изделия from Варианты \
+    Inner Join Состав_изделия ON Варианты.Номер_изделия =  \
+    Состав_изделия.Номер_изделия where Номер_варианта = "  +
     QString::number( sm_Variant ) + " and Номер_Детали = " + QString::number( m_DetailType );
   QSqlQuery Query;
   Query.exec( RusQuery );
@@ -543,10 +543,11 @@ GroupEquipment::GroupEquipment( int GroupId, ActingBlock *pPrevQueue, Delay* pLi
   m_pRNumber = nullptr;
   pPrevQueue->SetNextBlock(this); //подключаемся к очереди
   QSqlQuery Query;
-  Query.exec("  Наименования_оборудования, \
+  QString SQL = "SELECT Наименования_оборудования, \
     Время_обработки_в_другом_цехе, Длительность_профилактики, \
     Интервал_между_профилактиками, Средний_коэффициент FROM Оборудование_цеха where Номер_группы = " +
-    QString::number(GroupId));
+    QString::number(GroupId);
+  Query.exec(SQL);
   if( Query.lastError().isValid() )
     throw "Ошибка при выполнении запроса:" + Query.lastError().text();
   Query.next();
@@ -591,7 +592,7 @@ void GroupEquipment::StartWork()
   m_EventQueue.clear();
   m_EventQueue.insert( Time::sm_StartWork, evSchiftStart );
   QSqlQuery Query;
-  Query.exec( " Название FROM Профессии where Группа_оборудования = " + QString::number( m_GroupId ) );
+  Query.exec( "SELECT Название FROM Профессии where Группа_оборудования = " + QString::number( m_GroupId ) );
   if( Query.lastError().isValid() )
     throw "Ошибка при выполнении запроса:" + Query.lastError().text();
   Query.next();
