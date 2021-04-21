@@ -1,4 +1,4 @@
-#include <math.h>
+﻿#include <math.h>
 #include <algorithm>
 #include <vector>
 #include <time.h>

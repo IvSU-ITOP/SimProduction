@@ -183,7 +183,7 @@ ServiceResult Queue::Evaluate(Actor *pA)
   if( R != IsBusy ) return R;
   if( m_Actors.empty() )
     m_TimeStart = Time::GetCurrentTime();
-  qDebug() << "Очередь? Тип " << pA->DetailType() << "Адрес " << pA << "Блок" <<  m_pNextBlock->GetName();
+  qDebug() << "Очередь Длина " << GetLen() << " Тип " << pA->DetailType() << "Адрес " << pA << "Блок" <<  m_pNextBlock->GetName();
   m_Actors.push_back( pA );
   m_MaxLen = max( m_MaxLen, m_Actors.size() );
   return Success;
@@ -391,12 +391,15 @@ void ProductionState::Evaluate()
       pActing = m_ActingBlocks.erase( pActing );
   m_Ware.clear();
   QSqlQuery Query;
-  QString RusQuery = QString("SELECT Номер_изделия, Наименование_изделия, Цена_изделия, Количество_шт from Варианты") +
-     "Inner Join Изделия ON Варианты.Номер_изделия = " +
+  QString RusQuery = QString("SELECT Варианты.Номер_изделия, Наименование_изделия, Цена_изделия, Количество_шт from Варианты") +
+     " Inner Join Изделия ON Варианты.Номер_изделия = " +
     "Изделия.Номер_изделия where Номер_варианта = " + QString::number( Route::sm_Variant );
   Query.exec( RusQuery );
   if( Query.lastError().isValid() )
+    {
+    qDebug()  << RusQuery << "Ошибка при выполнении запроса: " << Query.lastError().text();
     throw "Ошибка при выполнении запроса: " + Query.lastError().text();
+    }
   while( Query.next() )
     {
     Product P( Query.value( 0 ).toInt(), Query.value( 1 ).toString(), Query.value( 2 ).toDouble(), Query.value( 3 ).toInt() );

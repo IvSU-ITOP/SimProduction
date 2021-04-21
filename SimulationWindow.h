@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW
+﻿#ifndef MAINWINDOW
 #define MAINWINDOW
 #include <qapplication.h>
 #include <QMainWindow>

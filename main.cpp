@@ -1,10 +1,12 @@
 ﻿#include "SimulationObjects.h"
 #include "SimulationWindow.h"
 #include <qdebug.h>
+#define Rus(x) pCodec->fromUnicode(x)
 
 extern QSqlDatabase s_DB;
 
 QFile s_LogFile( "Log.txt" );
+QTextCodec *pCodec = QTextCodec::codecForName("Windows-1251");
 QDebug s_Debug( &s_LogFile );
 
 void MessageOutput( QtMsgType type, const QMessageLogContext &context, const QString &msg )
@@ -16,19 +18,19 @@ void MessageOutput( QtMsgType type, const QMessageLogContext &context, const QSt
   switch( type )
     {
     case QtDebugMsg:
-      s_LogFile.write( "Отладочное сообщение: " + localMsg + "\r\n" );
+      s_LogFile.write( Rus("Отладочное сообщение: ") + localMsg + "\r\n" );
       break;
     case QtInfoMsg:
-      s_LogFile.write( "Информация: " + localMsg + "\r\n" );
+      s_LogFile.write( Rus("Информация: ") + localMsg + "\r\n" );
       break;
     case QtWarningMsg:
-      s_LogFile.write( "Предупреждение: " + localMsg + "\r\n" );
+      s_LogFile.write( Rus("Предупреждение: ") + localMsg + "\r\n" );
       break;
     case QtCriticalMsg:
-      s_LogFile.write( "Ошибка: " + localMsg + "\r\n" );
+      s_LogFile.write( Rus("Ошибка: ") + localMsg + "\r\n" );
       break;
     case QtFatalMsg:
-      s_LogFile.write( "Фатальная ошибка: " + localMsg + "\r\n" );
+      s_LogFile.write( Rus("Фатальная ошибка: ") + localMsg + "\r\n" );
       abort();
     }
   s_LogFile.flush();
@@ -50,7 +52,7 @@ int main( int argc, char *argv[] )
     {
     s_DB.setDatabaseName( "production" );
     s_DB.setUserName("root");
-    s_DB.setPassword("Juzefa1Niedzw2");
+    s_DB.setPassword("Ivsu-Itop1");
     if( !s_DB.open() ) throw QString("База данных не открылась");
     ProductionState PS;
     Generator DetailParty; //создаем партии деталей

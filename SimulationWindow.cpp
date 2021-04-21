@@ -1,8 +1,8 @@
 ﻿#include "SimulationWindow.h"
 #include "SimulationObjects.h"
 #include "qheaderview.h"
+#include <qdebug.h>
 
-extern QTextCodec *pCodec;
 extern QSqlDatabase s_DB;
 
 MainWindow::MainWindow ()
@@ -53,15 +53,17 @@ void MainWindow::slotShowTableNine ()
     QSqlQuery Query;
     QTableView *pView = new QTableView;
     QSqlQueryModel *pModel = new QSqlQueryModel;
-    QString m_SQLQuery = " SELECT [Номер_изделия], [Номер_детали], [Применяемость], \
-      (SELECT[Количество, шт.]  from [Варианты] where [Номер_варианта] = " + QString::number (Route::sm_Variant) +
-      " and [Варианты].[Номер_изделия] = [Состав_изделия].[Номер_изделия]) as [План производства изделий]," +
-      " (SELECT[Количество, шт.]  from [Варианты] where [Номер варианта] = " + QString::number (Route::sm_Variant) +
-      " and [Варианты].[Номер изделия] = [Состав_изделия].[Номер_изделия])  * [Применяемость] as[План производства деталей] " +
-      "from[Состав_изделия] ";
+    QString m_SQLQuery = " SELECT Номер_изделия, Номер_детали, Применяемость, \
+      (SELECT Количество_шт from Варианты where Номер_варианта = " + QString::number (Route::sm_Variant) +
+       " and Варианты.Номер_изделия = Состав_изделия.Номер_изделия) as План_производства_изделий, \
+       (SELECT Количество_шт from Варианты where Номер_варианта = " + QString::number (Route::sm_Variant) +
+     " and Варианты.Номер_изделия = Состав_изделия.Номер_изделия)  * Применяемость as План_производства_деталей \
+     from Состав_изделия ";
     Query.exec (m_SQLQuery);
     pModel->setQuery (m_SQLQuery);
     pView->setModel (pModel);
+    pView->setColumnWidth(3, 180);
+    pView->setColumnWidth(4, 180);
     pView->showMaximized ();
 }
 
@@ -311,7 +313,7 @@ m_pShiftCount( new QSpinBox ), m_pStartDay( new QDoubleSpinBox ),
 m_pTimeSimulation( new QSpinBox ), m_pVariant( new QSpinBox )
   {
   QSqlQuery Query;
-  Query.exec( "SELECT  min([Номер варианта]), max([Номер варианта]) FROM Варианты" );
+  Query.exec( "SELECT  min(Номер_варианта), max(Номер_варианта) FROM Варианты" );
   Query.next();
   QVBoxLayout *pVLayout = new QVBoxLayout;
   QBoxLayout *pHLayout = new QHBoxLayout;
